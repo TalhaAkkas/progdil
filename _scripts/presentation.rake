@@ -25,11 +25,11 @@ presentation   = {}
 tag            = {} #presentation ve tag sözlüklerini ilkledik
 
 class File  # File class ına monkey patch yontemi ile eklemelerde bulunuyoruz
-  @@absolute_path_here = Pathname.new(Pathname.pwd) # static absolute_path_here değiskenini tanımladık
+  @@absolute_path_here = Pathname.new(Pathname.pwd) # static absolute_path_here değiskenini tanımladık ve su anki pwd ile ilkledik
   def self.to_herepath(path) # static erisimli bi metod  tanımladık
     Pathname.new(File.expand_path(path)).relative_path_from(@@absolute_path_here).to_s
   end# verdiğimiz  mutlak yolları bulunduğumuz dizine gore goreceli yol halıne geritiyor
-  def self.to_filelist(path) # static erisimli klasorun içindeki dosyaların listesini donduren bir metod tanımladık
+  def self.to_filelist(path) # static erisimli klasorun içindeki tüm dosyaların listesini donduren bir metod tanımladık
     File.directory?(path) ?
       FileList[File.join(path, '*')].select { |f| File.file?(f) } :
       [path]
