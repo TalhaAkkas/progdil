@@ -1,24 +1,24 @@
-
-require 'pathname'
+quire 'pathname'
 require 'pythonconfig'
-require 'yaml'
+require 'yaml'   # gereklilikleri belirliyoruz   # modul import ediyoruz
 
-CONFIG = Config.fetch('presentation', {})
+CONFiG = Config.fetch('presentation', {})   # ayarlar dosyasından presentation key ine karşılık gelen veriyi istiyorunz
+# eğer yoksa boş sözlük vermesini söylüyoruz
 
-PRESENTATION_DIR = CONFIG.fetch('directory', 'p')
-DEFAULT_CONFFILE = CONFIG.fetch('conffile', '_templates/presentation.cfg')
-INDEX_FILE = File.join(PRESENTATION_DIR, 'index.html')
-IMAGE_GEOMETRY = [ 733, 550 ]
-DEPEND_KEYS    = %w(source css js)
+PRESENTATiON_DiR = CONFiG.fetch('directory', 'p') # directory key ini istiyoruz #default değer 'p'
+DEFAULT_CONFFiLE = CONFiG.fetch('conffile', '_templates/presentation.cfg') # coffile keyini istiyoruz #default değer '_templates/presentation.cfg'
+iNDEX_FiLE = File.join(PRESENTATiON_DiR, 'index.html') # pythondaki open komutu gibi PRESENTATiON_DiR de bulunan index.hmtl dosyasını okuyoruz
+iMAGE_GEOMETRY = [ 733, 550 ]  # bir arraya iki değer atıyoruz (bu değerleri sunumlardaki imajların azami boyutu olarak kullanacağız)
+DEPEND_KEYS    = %w(source css js)  # 
 DEPEND_ALWAYS  = %w(media)
 TASKS = {
-    :index   => 'sunumları indeksle',
-    :build   => 'sunumları oluştur',
-    :clean   => 'sunumları temizle',
-    :view    => 'sunumları görüntüle',
-    :run     => 'sunumları sun',
-    :optim   => 'resimleri iyileştir',
-    :default => 'öntanımlı görev',
+    :index   => 'sunumlari indeksle',
+    :build   => 'sunumlari olustur',
+    :clean   => 'sunumlari temizle',
+    :view    => 'sunumlari goruntule',
+    :run     => 'sunumlari sun',
+    :optim   => 'resimleri iyilestir',
+    :default => 'ontanimli gorev',
 }
 
 presentation   = {}
@@ -40,7 +40,7 @@ def png_comment(file, string)
   require 'chunky_png'
   require 'oily_png'
 
-  image = ChunkyPNG::Image.from_file(file)
+  image = ChunkyPNG::image.from_file(file)
   image.metadata['Comment'] = 'raked'
   image.save(file)
 end
@@ -70,8 +70,8 @@ def optim
   (pngs + jpgs).each do |f|
     w, h = %x{identify -format '%[fx:w] %[fx:h]' #{f}}.split.map { |e| e.to_i }
     size, i = [w, h].each_with_index.max
-    if size > IMAGE_GEOMETRY[i]
-      arg = (i > 0 ? 'x' : '') + IMAGE_GEOMETRY[i].to_s
+    if size > iMAGE_GEOMETRY[i]
+      arg = (i > 0 ? 'x' : '') + iMAGE_GEOMETRY[i].to_s
       sh "mogrify -resize #{arg} #{f}"
     end
   end
@@ -87,9 +87,9 @@ def optim
   end
 end
 
-default_conffile = File.expand_path(DEFAULT_CONFFILE)
+default_conffile = File.expand_path(DEFAULT_CONFFiLE)
 
-FileList[File.join(PRESENTATION_DIR, "[^_.]*")].each do |dir|
+FileList[File.join(PRESENTATiON_DiR, "[^_.]*")].each do |dir|
   next unless File.directory?(dir)
   chdir dir do
     name = File.basename(dir)
@@ -100,12 +100,12 @@ FileList[File.join(PRESENTATION_DIR, "[^_.]*")].each do |dir|
 
     landslide = config['landslide']
     if ! landslide
-      $stderr.puts "#{dir}: 'landslide' bölümü tanımlanmamış"
+      $stderr.puts "#{dir}: 'landslide' bolumu tanimlanmamis"
       exit 1
     end
 
     if landslide['destination']
-      $stderr.puts "#{dir}: 'destination' ayarı kullanılmış; hedef dosya belirtilmeyin"
+      $stderr.puts "#{dir}: 'destination' ayari kullanilmis; hedef dosya belirtilmeyin"
       exit 1
     end
 
@@ -116,7 +116,7 @@ FileList[File.join(PRESENTATION_DIR, "[^_.]*")].each do |dir|
       base = 'presentation'
       ispublic = false
     else
-      $stderr.puts "#{dir}: sunum kaynağı 'presentation.md' veya 'index.md' olmalı"
+      $stderr.puts "#{dir}: sunum kaynagi 'presentation.md' veya 'index.md' olmali"
       exit 1
     end
 
@@ -136,15 +136,15 @@ FileList[File.join(PRESENTATION_DIR, "[^_.]*")].each do |dir|
     tags = []
 
    presentation[dir] = {
-      :basename  => basename,	# üreteceğimiz sunum dosyasının baz adı
-      :conffile  => conffile,	# landslide konfigürasyonu (mutlak dosya yolu)
-      :deps      => deps,	# sunum bağımlılıkları
-      :directory => dir,	# sunum dizini (tepe dizine göreli)
-      :name      => name,	# sunum ismi
-      :public    => ispublic,	# sunum dışarı açık mı
-      :tags      => tags,	# sunum etiketleri
-      :target    => target,	# üreteceğimiz sunum dosyası (tepe dizine göreli)
-      :thumbnail => thumbnail, 	# sunum için küçük resim
+      :basename  => basename, # uretecegimiz sunum dosyasinin baz adi
+      :conffile  => conffile, # landslide konfigurasyonu (mutlak dosya yolu)
+      :deps      => deps, # sunum bagimliliklari
+      :directory => dir,  # sunum dizini (tepe dizine goreli)
+      :name      => name, # sunum ismi
+      :public    => ispublic, # sunum disari acik mi
+      :tags      => tags, # sunum etiketleri
+      :target    => target, # uretecegimiz sunum dosyasi (tepe dizine goreli)
+      :thumbnail => thumbnail,  # sunum icin kucuk resim
     }
   end
 end
@@ -197,7 +197,7 @@ presentation.each do |presentation, data|
       if File.exists?(data[:target])
         sh "touch #{data[:directory]}; #{browse_command data[:target]}"
       else
-        $stderr.puts "#{data[:target]} bulunamadı; önce inşa edin"
+        $stderr.puts "#{data[:target]} bulunamadi; once insa edin"
       end
     end
 
@@ -226,18 +226,18 @@ namespace :p do
   end
 
   task :build do
-    index = YAML.load_file(INDEX_FILE) || {}
+    index = YAML.load_file(iNDEX_FiLE) || {}
     presentations = presentation.values.select { |v| v[:public] }.map { |v| v[:directory] }.sort
     unless index and presentations == index['presentations']
       index['presentations'] = presentations
-      File.open(INDEX_FILE, 'w') do |f|
+      File.open(iNDEX_FiLE, 'w') do |f|
         f.write(index.to_yaml)
         f.write("---\n")
       end
     end
   end
 
-  desc "sunum menüsü"
+  desc "sunum menusu"
   task :menu do
     lookup = Hash[
       *presentation.sort_by do |k, v|
@@ -250,7 +250,7 @@ namespace :p do
     name = choose do |menu|
       menu.default = "1"
       menu.prompt = color(
-        'Lütfen sunum seçin ', :headline
+        'Lutfen sunum secin ', :headline
       ) + '[' + color("#{menu.default}", :special) + ']'
       menu.choices(*lookup.keys)
     end
@@ -260,6 +260,7 @@ namespace :p do
   task :m => :menu
 end
 
-desc "sunum menüsü"
+desc "sunum menusu"
 task :p => ["p:menu"]
 task :presentation => :p
+
