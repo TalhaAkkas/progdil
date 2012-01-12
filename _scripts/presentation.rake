@@ -235,7 +235,7 @@ namespace :p do
       File.open(iNDEX_FiLE, 'w') do |f|
         f.write(index.to_yaml)
         f.write("---\n")
-      end # dosyaları oluştur
+      end # dosyaları oluştur komutu
     end
   end
 
