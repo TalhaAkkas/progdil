@@ -145,7 +145,7 @@ FileList[File.join(PRESENTATiON_DiR, "[^_.]*")].each do |dir| # sunumlar klasaru
       :name      => name, # sunum ismi
       :public    => ispublic, # sunum disari acik mi
       :tags      => tags, # sunum etiketleri
-      :target    => target, # uretecegimiz sunum dosyasi (tepe dizine goreli)
+      :target    => target, # uretecegimiz sunum dos("configyasi (tepe dizine goreli)
       :thumbnail => thumbnail,  # sunum icin kucuk resim
     }
   end
