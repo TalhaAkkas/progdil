@@ -156,7 +156,7 @@ presentation.each do |k, v|
     tag[t] ||= []
     tag[t] << k
   end
-end #sözlükdeki tümgörevleri yerine getir
+end #sözlükdeki tümgörevleri taga yolla 
 
 tasktab = Hash[*TASKS.map { |k, v| [k, { :desc => v, :tasks => [] }] }.flatten]
 # genel görevleri yerine gertir 

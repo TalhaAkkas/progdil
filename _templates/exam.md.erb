@@ -1,9 +1,13 @@
 <%= title %>
-
+<%= "\n---" %>
 
 <% list.each do |quests| %>
 	<%= quests %>
+	<%  quests.lines.each do%>
+		<%= "-" %>	
+	<% end %>	
 <% end %>
 
+<%= "---" %>
 <%= footer %>
 

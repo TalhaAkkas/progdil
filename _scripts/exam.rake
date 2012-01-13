@@ -14,7 +14,7 @@ def createPdf(fileName)
     f = File.open(a, 'w')
     f.write(temp)
     f.close()
-    sh "markdown2pdf #{a} "
+    sh "markdown2pdf #{a}"
     sh "rm -f #{a}"
 end
 
@@ -55,8 +55,9 @@ require 'erb'
 task :exam do
   Dir.foreach("_exams") do |file|
     unless  File.directory?("_exams/" + file) 
-		if File.exist?(file[0..-5] + ".pdf")
-			file_date = File.ctime(file[0..-5] + ".pdf") 
+		filepath =  file[0..-5] + ".pdf"
+		if File.exist?(filepath)
+			file_date = File.ctime(filepath) 
 		end
         if depensChanged?(file_date, dependsList(file))
 			createPdf(file)
@@ -66,4 +67,14 @@ task :exam do
   end
 end
 
+task :resetall do
+	Dir.foreach("_exams") do |file|
+    		unless  File.directory?("_exams/" + file) 
+			if File.exist?(file[0..-5] + ".pdf")
+				sh "touch   _exams/#{file}"
+			end	
+		end
+	end
+	sh "rake exam"
+end 
 task :default => :exam
